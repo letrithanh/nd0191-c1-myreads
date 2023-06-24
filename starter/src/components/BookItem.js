@@ -1,20 +1,13 @@
 import React from "react";
 import { update } from "../BooksAPI";
-import { CURRENTLY_READIND, READ, WANT_TO_READ } from "../BookType";
 
-const BookItem = ({ book, onBookItemUpdate }) => {
+const BookItem = ({ book, onBookItemUpdate, preSelectCategory }) => {
 
     async function onSelectChanged(event) {
         await update(book, event.target.value);
         if (onBookItemUpdate) {
             onBookItemUpdate();
         }
-    }
-
-    function isNoneOptionDisplay() {
-        return book?.shelf === CURRENTLY_READIND ||
-                book?.shelf === WANT_TO_READ ||
-                book?.shelf === READ;
     }
 
     return (
@@ -29,8 +22,8 @@ const BookItem = ({ book, onBookItemUpdate }) => {
                     }}
                 ></div>
                 <div className="book-shelf-changer">
-                    <select onChange={onSelectChanged}>
-                        <option value="none" disabled>
+                    <select onChange={onSelectChanged} value={preSelectCategory || book.shelf}>
+                        <option value="undefine" disabled>
                             Move to...
                         </option>
                         <option value="currentlyReading">
@@ -38,10 +31,7 @@ const BookItem = ({ book, onBookItemUpdate }) => {
                         </option>
                         <option value="wantToRead">Want to Read</option>
                         <option value="read">Read</option>
-                        {
-                            isNoneOptionDisplay() &&
-                            <option value="none">None</option>
-                        }
+                        <option value="none">None</option>
                     </select>
                 </div>
             </div>
